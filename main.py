@@ -19,6 +19,7 @@ class GraphicsEngine:
         self.ctx = gl.create_context()
 
         self.timer = pg.time.Clock()
+        self.tk = 0
         self.camera = Camera(self)
 
         self.scene = Cube(self)
@@ -27,6 +28,9 @@ class GraphicsEngine:
         self.ctx.clear(color=(1,1,1))
         self.scene.render()
         pg.display.flip()
+
+    def get_tk(self):
+        self.tk = pg.time.get_ticks() * 0.001
 
     def check_events(self):
         for event in pg.event.get():
@@ -43,6 +47,7 @@ class GraphicsEngine:
     def run(self):
         print("Starting run loop")
         while True:
+            self.get_tk()
             self.check_events()
             self.render()
             self.timer.tick(60)
