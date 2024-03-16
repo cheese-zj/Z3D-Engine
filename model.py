@@ -1,5 +1,6 @@
 import numpy
 import glm
+import pygame
 
 # class Tri:
 #     def __init__(self, app):
@@ -57,6 +58,11 @@ class Cube:
         self.m_model = self.get_md_matrix()
         self.on_init()
 
+    def gen_texture(self, path):
+        texture = pygame.image.load(path).convert()
+        texture = self.ctx.texture(size=texture.get_size(), components=3, data = pygame.image.tostring(texture, 'RGB'))
+        return texture
+    
     def on_init(self):
         self.shader_program['m_proj'].write(self.app.camera.m_proj)
         self.shader_program['m_view'].write(self.app.camera.m_view)

@@ -17,6 +17,8 @@ class GraphicsEngine:
 
         pg.display.set_mode(self.WIN_SIZE, flags = pg.OPENGL | pg.DOUBLEBUF)
         self.ctx = gl.create_context()
+        self.ctx.enable(flags=gl.DEPTH_TEST | gl.CULL_FACE)
+        # self.ctx.front_face = 'cw';
 
         self.timer = pg.time.Clock()
         self.tk = 0
