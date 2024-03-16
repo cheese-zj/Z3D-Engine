@@ -2,6 +2,7 @@ import pygame as pg
 import moderngl as gl
 import sys
 from model import *
+from projection import Camera
 
 class GraphicsEngine:
     def __init__(self, win_size = (1200, 720)):
@@ -18,8 +19,9 @@ class GraphicsEngine:
         self.ctx = gl.create_context()
 
         self.timer = pg.time.Clock()
+        self.camera = Camera(self)
 
-        self.scene = Tri(self)
+        self.scene = Cube(self)
 
     def render(self):
         self.ctx.clear(color=(1,1,1))
