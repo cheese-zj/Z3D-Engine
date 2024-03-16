@@ -1,9 +1,9 @@
 import pygame as pg
-import moderngl as mgl
+import moderngl as gl
 import sys
 
 class GraphicsEngine:
-    def __init__(self, win_size = (1600, 900)):
+    def __init__(self, win_size = (1200, 720)):
         pg.init()
 
         self.WIN_SIZE = win_size
@@ -11,10 +11,10 @@ class GraphicsEngine:
         #  using v3.3 for opengl
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
-        pg.display.gl_get_attribute(pg.GL_CONTEXT_PROFILE_MASK , pg.GL_CONTEXT_PROFILE_CORE)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK , pg.GL_CONTEXT_PROFILE_CORE)
 
         pg.display.set_mode(self.WIN_SIZE, flags = pg.OPENGL | pg.DOUBLEBUF)
-        self.ctx = mgl.create_context()
+        self.ctx = gl.create_context()
 
         self.timer = pg.time.Clock()
 
@@ -24,11 +24,16 @@ class GraphicsEngine:
 
     def check_events(self):
         for event in pg.event.get():
-            if event.type == pg.QUIT or (event.key == pg.K_ESCAPE and event.type == pg.KEYDOWN):
+            if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    pg.quit()
+                    sys.exit()
 
     def run(self):
+        print("Starting run loop")
         while True:
             self.check_events()
             self.render()
@@ -36,6 +41,6 @@ class GraphicsEngine:
 
 if __name__ == '__main__':
     app = GraphicsEngine()
-    print("Now running")
-    app.run
+    # print("Now running")
+    app.run()
     
