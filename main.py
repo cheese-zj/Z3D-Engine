@@ -1,6 +1,7 @@
 import pygame as pg
 import moderngl as gl
 import sys
+from model import *
 
 class GraphicsEngine:
     def __init__(self, win_size = (1200, 720)):
@@ -18,17 +19,22 @@ class GraphicsEngine:
 
         self.timer = pg.time.Clock()
 
+        self.scene = Tri(self)
+
     def render(self):
         self.ctx.clear(color=(1,1,1))
+        self.scene.render()
         pg.display.flip()
 
     def check_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
+                self.scene.destroy()
                 pg.quit()
                 sys.exit()
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
+                    self.scene.destroy()
                     pg.quit()
                     sys.exit()
 
