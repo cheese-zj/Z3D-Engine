@@ -3,6 +3,7 @@ import moderngl as gl
 import sys
 from model import *
 from projection import Camera
+from lighting import Light
 
 class GraphicsEngine:
     def __init__(self, win_size = (1200, 720)):
@@ -19,11 +20,12 @@ class GraphicsEngine:
         self.ctx = gl.create_context()
         self.ctx.enable(flags=gl.DEPTH_TEST | gl.CULL_FACE)
         # self.ctx.front_face = 'cw';
-
+        
         self.timer = pg.time.Clock()
         self.tk = 0
+        self.dtk = 0
         self.camera = Camera(self)
-
+        self.light = Light()
         self.scene = Cube(self)
 
     def render(self):
@@ -51,8 +53,9 @@ class GraphicsEngine:
         while True:
             self.get_tk()
             self.check_events()
+            self.camera.update()
             self.render()
-            self.timer.tick(60)
+            self.dtk = self.timer.tick(60)
 
 if __name__ == '__main__':
     app = GraphicsEngine()

@@ -1,6 +1,6 @@
 import numpy
 import glm
-import pygame
+import pygame as pg
 
 # class Tri:
 #     def __init__(self, app):
@@ -56,14 +56,25 @@ class Cube:
         self.shader_program = self.get_shader_program('default')
         self.vao = self.get_vao()
         self.m_model = self.get_md_matrix()
+        self.texture = self.gen_texture(path='textures/sus.png')
         self.on_init()
 
     def gen_texture(self, path):
-        texture = pygame.image.load(path).convert()
-        texture = self.ctx.texture(size=texture.get_size(), components=3, data = pygame.image.tostring(texture, 'RGB'))
+        texture = pg.image.load(path).convert()
+        texture = pg.transform.flip(texture, flip_x=False, flip_y=True)
+        texture = self.ctx.texture(size=texture.get_size(), components=3, data = pg.image.tostring(texture, 'RGB'))
         return texture
     
     def on_init(self):
+
+        self.shader_program['light.position'].write(self.app.light.position)
+        self.shader_program['light.ambient'].write(self.app.light.ambient)
+        self.shader_program['light.diffuse'].write(self.app.light.diffuse)
+        self.shader_program['light.specular'].write(self.app.light.specular)
+
+        self.shader_program['u_txt_0'] = 0
+        self.texture.use()
+
         self.shader_program['m_proj'].write(self.app.camera.m_proj)
         self.shader_program['m_view'].write(self.app.camera.m_view)
         self.shader_program['m_model'].write(self.m_model)
@@ -73,12 +84,14 @@ class Cube:
         return m_model
 
     def get_vao(self):
-        vao = self.ctx.vertex_array(self.shader_program, [(self.vbo, '2f 3f', 'in_texcoord_0', 'in_position')])
+        vao = self.ctx.vertex_array(self.shader_program, [(self.vbo, '2f 3f 3f', 'in_texcoord_0', 'in_normal',  'in_position')])
         return vao
     
     def update(self):
         m_model = glm.rotate(self.m_model, self.app.tk, glm.vec3(0.5, 1, 0))
         self.shader_program['m_model'].write(m_model)
+        self.shader_program['m_view'].write(self.app.camera.m_view)
+        self.shader_program['camPos'].write(self.app.camera.position)
 
     def render(self):
         self.update()
@@ -118,7 +131,13 @@ class Cube:
 
         texture_coord_data = self.get_data_cube(texture_coord, texture_coord_indices)
 
+        normals = [6*(0,0,1),6*(1,0,0),6*(0,0,-1),6*(-1,0,0),6*(0,1,0),6*(0,-1,0),]
+
+        normals = numpy.array(normals, dtype = 'f4').reshape(36, 3)
+
+        vertex_data = numpy.hstack([normals, vertex_data])
         vertex_data = numpy.hstack([texture_coord_data, vertex_data])
+        
         return vertex_data
     
     def get_vbo(self):
