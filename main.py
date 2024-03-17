@@ -26,11 +26,12 @@ class GraphicsEngine:
         self.dtk = 0
         self.camera = Camera(self)
         self.light = Light()
-        self.scene = Cube(self)
+        self.scene = [Human(self)]
 
     def render(self):
-        self.ctx.clear(color=(1,1,1))
-        self.scene.render()
+        self.ctx.clear(color=(0.18,0.60,0.75))
+        for item in self.scene:
+            item.render()
         pg.display.flip()
 
     def get_tk(self):

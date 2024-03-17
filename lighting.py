@@ -7,4 +7,4 @@ class Light:
 
         self.ambient = 0.1 * self.color
         self.diffuse = 0.8 * self.color
-        self.specular = 1.0 * self.color
+        self.specular = 2.0 * self.color
