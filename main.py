@@ -56,7 +56,7 @@ class GraphicsEngine:
             self.check_events()
             self.camera.update()
             self.render()
-            self.dtk = self.timer.tick(60)
+            self.dtk = self.timer.tick(120)
 
 if __name__ == '__main__':
     app = GraphicsEngine()
